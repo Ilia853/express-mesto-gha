@@ -1,4 +1,6 @@
 const Card = require('../models/card');
+const mongoose = require('mongoose');
+
 
 const getCards = (req, res) => {
   Card.find({})
