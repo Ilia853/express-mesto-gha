@@ -30,7 +30,7 @@ const likeCard = (req, res) => {
     { new: true },
   )
     .then(r => res.status(200).send(r))
-    .catch(err => console.log(err));
+    .catch(err => console.log('Like ERROR',err));
 }
 
 const dislikeCard = (req, res) => {
