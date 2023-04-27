@@ -16,7 +16,7 @@ const getUser = (req, res) => {
   const { userId } = req.params;
 
   return User.findById(userId)
-    .then(user => res.status(200).send(user))
+    .then(user => { if (user) { res.status(200).send(user) } else { res.status(404).send({message: 'Пользователь не найден'}) } })
     .catch(err => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: "Некорректный id пользователя" })

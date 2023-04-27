@@ -33,7 +33,7 @@ const createCard = (req, res) => {
   Card.create({ name, link, owner })
     .then(card => res.status(200).send(card))
     .catch(err => {
-      if (err.name === 'CastError') {
+      if (err.name === 'ValidationError') {
         res.status(400).send({ message: "Некорректные данные карточки" })
       } else if (err.status === 404) {
         res.status(404).send({ message: err.message })
