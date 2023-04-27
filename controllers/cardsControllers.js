@@ -1,10 +1,15 @@
 const Card = require('../models/card');
-const mongoose = require('mongoose');
-
 
 const getCards = (req, res) => {
   Card.find({})
-    .then(cards => res.status(200).send(cards));
+    .then(cards => res.status(200).send(cards))
+    .catch(err => {
+      if (err.status === 404) {
+        res.status(404).send({ message: err.message })
+      } else {
+        res.status(500).send({ message: "Ошибка сервера" })
+      }
+    })
 }
 
 const deleteCard = (req, res) => {
@@ -12,7 +17,14 @@ const deleteCard = (req, res) => {
 
   Card.findOneAndDelete(cardId)
     .then(card => res.status(200).send(card))
-    .catch(err => console.log(err));
+    .catch(err => console.log(err))
+    .catch(err => {
+      if (err.status === 404) {
+        res.status(404).send({ message: err.message })
+      } else {
+        res.status(500).send({ message: "Ошибка сервера" })
+      }
+    })
 }
 
 const createCard = (req, res) => {
@@ -20,7 +32,15 @@ const createCard = (req, res) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner })
     .then(card => res.status(200).send(card))
-    .catch(err => console.log(err));
+    .catch(err => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: "Некорректные данные карточки" })
+      } else if (err.status === 404) {
+        res.status(404).send({ message: err.message })
+      } else {
+        res.status(500).send({ message: "Ошибка сервера" })
+      }
+    })
 }
 
 const likeCard = (req, res) => {
@@ -30,7 +50,13 @@ const likeCard = (req, res) => {
     { new: true },
   )
     .then(r => res.status(200).send(r))
-    .catch(err => console.log('Like ERROR',err));
+    .catch(err => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: "Некорректный id карточки" })
+      } else {
+        res.status(500).send({ message: "Ошибка сервера" })
+      }
+    })
 }
 
 const dislikeCard = (req, res) => {
@@ -40,7 +66,13 @@ const dislikeCard = (req, res) => {
     { new: true },
   )
     .then(r => res.status(200).send(r))
-    .catch(err => console.log(err));
+    .catch(err => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: "Некорректный id карточки" })
+      } else {
+        res.status(500).send({ message: "Ошибка сервера" })
+      }
+    })
 }
 
 
