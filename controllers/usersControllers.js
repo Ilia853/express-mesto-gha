@@ -62,7 +62,7 @@ const updateUser = (req, res) => {
 
 const updateAvatar = (req, res) => {
   const { _id, avatar } = req.body;
-  User.findByIdAndUpdate(_id, { avatar })
+  User.findByIdAndUpdate(_id, { avatar }, {new: true, runValidators: true})
     .then(user => res.status(200).send(user))
     .catch(err => {
       if (err.name === 'ValidationError') {
