@@ -45,17 +45,17 @@ const createUser = (req, res) => {
 
 const updateUser = (req, res) => {
   const { _id, name, about, avatar } = req.body;
-  return User.findByIdAndUpdate(_id, { name, about, avatar })
-  .then(user => res.status(200).send(user))
-  .catch(err => {
-    if (err.name === 'ValidationError') {
-      res.status(400).send({ message: "Некорректные данные пользователя" })
-    } else if (err.status === 404) {
-      res.status(404).send({ message: err.message })
-    } else {
-      res.status(500).send({ message: "Ошибка сервера" })
-    }
-  });
+  User.findByIdAndUpdate(req.body._id, { name, about, avatar })
+    .then(user => res.status(200).send(user))
+    .catch(err => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: "Некорректные данные пользователя" })
+      } else if (err.status === 404) {
+        res.status(404).send({ message: err.message })
+      } else {
+        res.status(500).send({ message: "Ошибка сервера" })
+      }
+    });
 }
 
 const updateAvatar = (req, res) => {
