@@ -47,8 +47,7 @@ const updateUser = (req, res) => {
   const { _id, name, about } = req.body;
   console.log(req.body);
   User.findByIdAndUpdate(_id, {$set:{ name, about }}, {new: true, runValidators: true})
-    .then(user => {res.status(200).send(user)
-      console.log(user);})
+    .then(user => {res.status(200).send(user)})
     .catch(err => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: "Некорректные данные пользователя" })
@@ -63,7 +62,7 @@ const updateUser = (req, res) => {
 const updateAvatar = (req, res) => {
   const { _id, avatar } = req.body;
   User.findByIdAndUpdate(_id, { avatar }, {new: true, runValidators: true})
-    .then(user => res.status(200).send(user))
+    .then(user => {res.status(200).send(user)})
     .catch(err => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: "Некорректная ссылка на аватар пользователя" })
