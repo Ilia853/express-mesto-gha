@@ -44,9 +44,9 @@ const createUser = (req, res) => {
 }
 
 const updateUser = (req, res) => {
-  const { _id, name, about, avatar } = req.body;
+  const { _id, name, about } = req.body;
   console.log(req.body);
-  User.findByIdAndUpdate(_id, { name, about, avatar }, {new: true, runValidators: true})
+  User.findByIdAndUpdate(_id, {$set:{ name, about }}, {new: true, runValidators: true})
     .then(user => {res.status(200).send(user)
       console.log(user);})
     .catch(err => {
@@ -61,11 +61,11 @@ const updateUser = (req, res) => {
 }
 
 const updateAvatar = (req, res) => {
-  const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar })
+  const { _id, avatar } = req.body;
+  User.findByIdAndUpdate(_id, { avatar })
     .then(user => res.status(200).send(user))
     .catch(err => {
-      if (err.name === 'CastError') {
+      if (err.name === 'ValidationError') {
         res.status(400).send({ message: "Некорректная ссылка на аватар пользователя" })
       } else if (err.status === 404) {
         res.status(404).send({ message: err.message })
