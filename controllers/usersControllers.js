@@ -1,101 +1,100 @@
-const User = require('../models/user');
+const User = require("../models/user");
 
 const getUsers = (req, res) => {
   return User.find({})
-    .then(users => res.status(200).send(users))
-    .catch(err => {
-      if (err.status === 404) {
-        res.status(404).send({ message: 'Пользователи не найдены' })     // надо убрать
-        return
-      } else {
-        res.status(500).send({ message: "Ошибка сервера" })
-        return
-      }
-    })
-}
+    .then((users) => res.status(200).send(users))
+    .catch(res.status(500).send({ message: "Ошибка сервера" }));
+};
 
 const getUser = (req, res) => {
   const { userId } = req.params;
-
   return User.findById(userId)
-    .then(user => {
+    .then((user) => {
       if (user) {
-        res.status(200).send(user)
+        res.status(200).send(user);
       } else {
-        res.status(404).send({ message: 'Пользователь не найден' })
+        res.status(404).send({ message: "Пользователь не найден" });
       }
     })
-    .catch(err => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: "Некорректный id пользователя" })
-        return
-      } else if (err.status === 404) {
-        res.status(404).send({ message: 'Пользователь не найден' })
-        console.log('Пользователь не найден');
-        return
+    .catch((err) => {
+      if (err.name === "CastError") {
+        res.status(400).send({ message: "Некорректный id пользователя" });
+        return;
       } else {
-        res.status(500).send({ message: "Ошибка сервера" })
-        return
+        res.status(500).send({ message: "Ошибка сервера" });
+        return;
       }
-    })
-}
+    });
+};
 
 const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
-    .then(user => res.status(200).send(user))
-    .catch(err => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: "Некорректные данные пользователя" })
-        return
+    .then((user) => res.status(200).send(user))
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        res.status(400).send({ message: "Некорректные данные пользователя" });
+        return;
       } else {
-        res.status(500).send({ message: "Ошибка сервера" })
-        return
+        res.status(500).send({ message: "Ошибка сервера" });
+        return;
       }
     });
-}
+};
 
 const updateUser = (req, res) => {
   const { _id, name, about } = req.body;
   console.log(req.body);
-  User.findByIdAndUpdate(_id, { name, about }, {new: true, runValidators: true})
-    .then(user => res.status(200).send(user))
-    .catch(err => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: "Некорректные данные пользователя" })
-        return
-      } else if (err.status === 404) {
-        res.status(404).send({ message: 'Пользователь не найден' })
-        return
+  User.findByIdAndUpdate(
+    _id,
+    { name, about },
+    { new: true, runValidators: true }
+  )
+    .then((user) => {
+      if (user) {
+        res.status(200).send(user);
       } else {
-        res.status(500).send({ message: "Ошибка сервера" })
-        return
+        res.status(404).send({ message: "Пользователь не найден" });
+      }
+    })
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        res.status(400).send({ message: "Некорректные данные пользователя" });
+        return;
+      } else {
+        res.status(500).send({ message: "Ошибка сервера" });
+        return;
       }
     });
-}
+};
 
 const updateAvatar = (req, res) => {
   const { _id, avatar } = req.body;
-  User.findByIdAndUpdate(_id, { avatar }, {new: true, runValidators: true})
-    .then(user => {res.status(200).send(user)})
-    .catch(err => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: "Некорректная ссылка на аватар пользователя" })
-        return
-      } else if (err.status === 404) {
-        res.status(404).send({ message: 'Пользователь не найден' })
-        return
+  User.findByIdAndUpdate(_id, { avatar }, { new: true, runValidators: true })
+    .then((user) => {
+      if (user) {
+        res.status(200).send(user);
       } else {
-        res.status(500).send({ message: "Ошибка сервера" })
-        return
+        res.status(404).send({ message: "Пользователь не найден" });
+      }
+    })
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        res
+          .status(400)
+          .send({ message: "Некорректная ссылка на аватар пользователя" });
+        return;
+      } else {
+        res.status(500).send({ message: "Ошибка сервера" });
+        return;
       }
     });
-}
+};
 
 module.exports = {
   getUsers,
   getUser,
   createUser,
   updateUser,
-  updateAvatar
-}
+  updateAvatar,
+};
