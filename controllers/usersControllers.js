@@ -47,8 +47,7 @@ const updateUser = (req, res) => {
   const { _id, name, about } = req.body;
   console.log(req.body);
   User.findByIdAndUpdate(_id, { name, about }, {new: true, runValidators: true})
-    .then(user => {res.status(200).send(user)
-      console.log(typeof user);})
+    .then(user => res.status(200).send(user))
     .catch(err => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: "Некорректные данные пользователя" })

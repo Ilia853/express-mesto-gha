@@ -13,14 +13,11 @@ const getCards = (req, res) => {
 }
 
 const deleteCard = (req, res) => {
-  const { cardId } = req.params;
-
-  Card.findOneAndDelete(cardId)
+  Card.findByIdAndDelete(req.params.cardId)
     .then(card => res.status(200).send(card))
-    .catch(err => console.log(err))
     .catch(err => {
-      if (err.status === 404) {
-        res.status(404).send({ message: err.message })
+      if (err.name === 'CastError') {
+        res.status(404).send({ message: "Некорректный id карточки" })
       } else {
         res.status(500).send({ message: "Ошибка сервера" })
       }
@@ -35,8 +32,6 @@ const createCard = (req, res) => {
     .catch(err => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: "Некорректные данные карточки" })
-      } else if (err.status === 404) {
-        res.status(404).send({ message: err.message })
       } else {
         res.status(500).send({ message: "Ошибка сервера" })
       }
