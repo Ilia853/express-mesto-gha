@@ -5,21 +5,31 @@ const getCards = (req, res) => {
     .then(cards => res.status(200).send(cards))
     .catch(err => {
       if (err.status === 404) {
-        res.status(404).send({ message: err.message })
+        res.status(404).send({ message: err.message })    // надо убрать
+        return
       } else {
         res.status(500).send({ message: "Ошибка сервера" })
+        return
       }
     })
 }
 
 const deleteCard = (req, res) => {
   Card.findByIdAndDelete(req.params.cardId)
-    .then(card => res.status(200).send(card))
+    .then(card => {
+      if (card) {
+        res.status(200).send(card)
+      } else {
+        res.status(404).send({ message: "Карточка не найдена" })
+      }
+    })
     .catch(err => {
       if (err.name === 'CastError') {
-        res.status(404).send({ message: "Некорректный id карточки" })
+        res.status(400).send({ message: "Некорректный id карточки" })
+        return
       } else {
         res.status(500).send({ message: "Ошибка сервера" })
+        return
       }
     })
 }
@@ -32,8 +42,10 @@ const createCard = (req, res) => {
     .catch(err => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: "Некорректные данные карточки" })
+        return
       } else {
         res.status(500).send({ message: "Ошибка сервера" })
+        return
       }
     })
 }
@@ -44,12 +56,20 @@ const likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .then(r => res.status(200).send(r))
+    .then(card => {
+      if (card) {
+        res.status(200).send(card)
+      } else {
+        res.status(404).send({ message: "Карточка не найдена" })
+      }
+    })
     .catch(err => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: "Некорректный id карточки" })
+        res.status(400).send({ message: "Некорректный id карточки" })     // добавить 404
+        return
       } else {
         res.status(500).send({ message: "Ошибка сервера" })
+        return
       }
     })
 }
@@ -60,12 +80,20 @@ const dislikeCard = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
-    .then(r => res.status(200).send(r))
+    .then(card => {
+      if (card) {
+        res.status(200).send(card)
+      } else {
+        res.status(404).send({ message: "Карточка не найдена" })
+      }
+    })
     .catch(err => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: "Некорректный id карточки" })
+        return
       } else {
         res.status(500).send({ message: "Ошибка сервера" })
+        return
       }
     })
 }

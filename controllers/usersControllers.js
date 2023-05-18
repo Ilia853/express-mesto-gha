@@ -5,9 +5,11 @@ const getUsers = (req, res) => {
     .then(users => res.status(200).send(users))
     .catch(err => {
       if (err.status === 404) {
-        res.status(404).send({ message: err.message })
+        res.status(404).send({ message: 'Пользователи не найдены' })     // надо убрать
+        return
       } else {
         res.status(500).send({ message: "Ошибка сервера" })
+        return
       }
     })
 }
@@ -16,14 +18,24 @@ const getUser = (req, res) => {
   const { userId } = req.params;
 
   return User.findById(userId)
-    .then(user => { if (user) { res.status(200).send(user) } else { res.status(404).send({message: 'Пользователь не найден'}) } })
+    .then(user => {
+      if (user) {
+        res.status(200).send(user)
+      } else {
+        res.status(404).send({ message: 'Пользователь не найден' })
+      }
+    })
     .catch(err => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: "Некорректный id пользователя" })
+        return
       } else if (err.status === 404) {
-        res.status(404).send({ message: err.message })
+        res.status(404).send({ message: 'Пользователь не найден' })
+        console.log('Пользователь не найден');
+        return
       } else {
         res.status(500).send({ message: "Ошибка сервера" })
+        return
       }
     })
 }
@@ -35,10 +47,10 @@ const createUser = (req, res) => {
     .catch(err => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: "Некорректные данные пользователя" })
-      } else if (err.status === 404) {
-        res.status(404).send({ message: err.message })
+        return
       } else {
         res.status(500).send({ message: "Ошибка сервера" })
+        return
       }
     });
 }
@@ -51,10 +63,13 @@ const updateUser = (req, res) => {
     .catch(err => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: "Некорректные данные пользователя" })
+        return
       } else if (err.status === 404) {
-        res.status(404).send({ message: err.message })
+        res.status(404).send({ message: 'Пользователь не найден' })
+        return
       } else {
         res.status(500).send({ message: "Ошибка сервера" })
+        return
       }
     });
 }
@@ -66,10 +81,13 @@ const updateAvatar = (req, res) => {
     .catch(err => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: "Некорректная ссылка на аватар пользователя" })
+        return
       } else if (err.status === 404) {
-        res.status(404).send({ message: err.message })
+        res.status(404).send({ message: 'Пользователь не найден' })
+        return
       } else {
         res.status(500).send({ message: "Ошибка сервера" })
+        return
       }
     });
 }
