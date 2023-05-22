@@ -1,9 +1,9 @@
-const User = require("../models/user");
+const User = require('../models/user');
 
 const getUsers = (req, res) => {
   return User.find({})
     .then((users) => res.status(200).send(users))
-    .catch((err) => res.status(500).send({ message: "Ошибка сервера" }));
+    .catch((err) => res.status(500).send({ message: 'Ошибка сервера' }));
 };
 
 const getUser = (req, res) => {
@@ -13,15 +13,15 @@ const getUser = (req, res) => {
       if (user) {
         res.status(200).send(user);
       } else {
-        res.status(404).send({ message: "Пользователь не найден" });
+        res.status(404).send({ message: 'Пользователь не найден' });
       }
     })
     .catch((err) => {
-      if (err.name === "CastError") {
-        res.status(400).send({ message: "Некорректный id пользователя" });
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Некорректный id пользователя' });
         return;
       } else {
-        res.status(500).send({ message: "Ошибка сервера" });
+        res.status(500).send({ message: 'Ошибка сервера' });
         return;
       }
     });
@@ -32,11 +32,11 @@ const createUser = (req, res) => {
   User.create({ name, about, avatar })
     .then((user) => res.status(200).send(user))
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        res.status(400).send({ message: "Некорректные данные пользователя" });
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Некорректные данные пользователя' });
         return;
       } else {
-        res.status(500).send({ message: "Ошибка сервера" });
+        res.status(500).send({ message: 'Ошибка сервера' });
         return;
       }
     });
@@ -44,7 +44,6 @@ const createUser = (req, res) => {
 
 const updateUser = (req, res) => {
   const { name, about } = req.body;
-  console.log(req.body);
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
@@ -54,15 +53,15 @@ const updateUser = (req, res) => {
       if (user) {
         res.status(200).send(user);
       } else {
-        res.status(404).send({ message: "Пользователь не найден" });
+        res.status(404).send({ message: 'Пользователь не найден' });
       }
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        res.status(400).send({ message: "Некорректные данные пользователя" });
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Некорректные данные пользователя' });
         return;
       } else {
-        res.status(500).send({ message: "Ошибка сервера" });
+        res.status(500).send({ message: 'Ошибка сервера' });
         return;
       }
     });
@@ -75,17 +74,17 @@ const updateAvatar = (req, res) => {
       if (user) {
         res.status(200).send(user);
       } else {
-        res.status(404).send({ message: "Пользователь не найден" });
+        res.status(404).send({ message: 'Пользователь не найден' });
       }
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === 'ValidationError') {
         res
           .status(400)
-          .send({ message: "Некорректная ссылка на аватар пользователя" });
+          .send({ message: 'Некорректная ссылка на аватар пользователя' });
         return;
       } else {
-        res.status(500).send({ message: "Ошибка сервера" });
+        res.status(500).send({ message: 'Ошибка сервера' });
         return;
       }
     });
