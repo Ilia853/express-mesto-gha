@@ -1,10 +1,8 @@
 const User = require('../models/user');
 
-const getUsers = (req, res) => {
-  return User.find({})
-    .then((users) => res.status(200).send(users))
-    .catch((err) => res.status(500).send({ message: 'Ошибка сервера' }));
-};
+const getUsers = (req, res) => User.find({})
+  .then((users) => res.status(200).send(users))
+  .catch((err) => res.status(500).send({ message: 'Ошибка сервера', error: err }));
 
 const getUser = (req, res) => {
   const { userId } = req.params;
@@ -19,10 +17,8 @@ const getUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: 'Некорректный id пользователя' });
-        return;
       } else {
         res.status(500).send({ message: 'Ошибка сервера' });
-        return;
       }
     });
 };
@@ -34,10 +30,8 @@ const createUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Некорректные данные пользователя' });
-        return;
       } else {
         res.status(500).send({ message: 'Ошибка сервера' });
-        return;
       }
     });
 };
@@ -47,7 +41,7 @@ const updateUser = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   )
     .then((user) => {
       if (user) {
@@ -59,10 +53,8 @@ const updateUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Некорректные данные пользователя' });
-        return;
       } else {
         res.status(500).send({ message: 'Ошибка сервера' });
-        return;
       }
     });
 };
@@ -82,10 +74,8 @@ const updateAvatar = (req, res) => {
         res
           .status(400)
           .send({ message: 'Некорректная ссылка на аватар пользователя' });
-        return;
       } else {
         res.status(500).send({ message: 'Ошибка сервера' });
-        return;
       }
     });
 };

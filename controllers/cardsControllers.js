@@ -3,7 +3,7 @@ const Card = require('../models/card');
 const getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.status(200).send(cards))
-    .catch((err) => res.status(500).send({ message: 'Ошибка сервера' }));
+    .catch((err) => res.status(500).send({ message: 'Ошибка сервера', error: err }));
 };
 
 const deleteCard = (req, res) => {
@@ -18,10 +18,8 @@ const deleteCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: 'Некорректный id карточки' });
-        return;
       } else {
         res.status(500).send({ message: 'Ошибка сервера' });
-        return;
       }
     });
 };
@@ -34,10 +32,8 @@ const createCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Некорректные данные карточки' });
-        return;
       } else {
         res.status(500).send({ message: 'Ошибка сервера' });
-        return;
       }
     });
 };
@@ -46,7 +42,7 @@ const likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .then((card) => {
       if (card) {
@@ -58,10 +54,8 @@ const likeCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: 'Некорректный id карточки' });
-        return;
       } else {
         res.status(500).send({ message: 'Ошибка сервера' });
-        return;
       }
     });
 };
@@ -70,7 +64,7 @@ const dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .then((card) => {
       if (card) {
@@ -82,10 +76,8 @@ const dislikeCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: 'Некорректный id карточки' });
-        return;
       } else {
         res.status(500).send({ message: 'Ошибка сервера' });
-        return;
       }
     });
 };
