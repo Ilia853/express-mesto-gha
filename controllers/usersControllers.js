@@ -11,7 +11,7 @@ const login = (req, res) => {
       if (!user) {
         Promise.reject(new Error('Неправильные почта или пароль'));
       }
-      bcrypt.compare(password, user.password);
+      return bcrypt.compare(password, user.password);
     })
     .then((match) => {
       if (!match) {
@@ -28,7 +28,7 @@ const login = (req, res) => {
       res.send({ token });
     })
     .catch((err) => {
-      res.send.status(401).send({ message: err.message });
+      res.status(401).send({ message: err.message });
     });
 };
 
