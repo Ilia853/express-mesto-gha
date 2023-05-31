@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const routes = require('./routes/index');
+const { login, createUser } = require('./controllers/usersControllers');
 
 const { PORT = 3000 } = process.env;
 
@@ -10,6 +11,8 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.post('/signin', login);
+app.post('/signup', createUser);
 app.use((req, res, next) => {
   req.user = {
     _id: '64359344f4f4aa99df69f780',

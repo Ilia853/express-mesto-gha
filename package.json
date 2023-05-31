@@ -19,7 +19,9 @@
   },
   "homepage": "https://github.com/Ilia853/express-mesto-gha#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.3"
   },
   "devDependencies": {
