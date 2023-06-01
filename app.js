@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const routes = require('./routes/index');
 const { login, createUser } = require('./controllers/usersControllers');
+const { auth } = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 
@@ -13,12 +14,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.post('/signin', login);
 app.post('/signup', createUser);
-app.use((req, res, next) => {
-  req.user = {
-    _id: '64359344f4f4aa99df69f780',
-  };
-  next();
-});
+// app.use((req, res, next) => {
+//   req.user = {
+//     _id: '64359344f4f4aa99df69f780',
+//   };
+//   next();
+// });
+app.use(auth);
 app.use(routes);
 
 app.all('*', (req, res) => {

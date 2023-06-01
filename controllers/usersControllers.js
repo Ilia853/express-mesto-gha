@@ -6,18 +6,18 @@ const User = require('../models/user');
 
 const login = (req, res) => {
   const { email, password } = req.body;
-  User.findOne({ email })
+  User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
         Promise.reject(new Error('Неправильные почта или пароль'));
       }
-      return bcrypt.compare(password, user.password);
-    })
-    .then((match) => {
-      if (!match) {
-        Promise.reject(new Error('Неправильные почта или пароль'));
-      }
-      res.send({ message: 'все верно!' });
+      return bcrypt.compare(password, user.password)
+        .then((match) => {
+          if (!match) {
+            return Promise.reject(new Error('Неправильные почта или пароль'));
+          }
+          return user;
+        });
     })
     .then((user) => {
       const token = jwt.sign(
@@ -25,7 +25,7 @@ const login = (req, res) => {
         'kamikaza',
         { expiresIn: '7d' },
       );
-      res.send({ token });
+      res.send({ message: 'вот токен', token });
     })
     .catch((err) => {
       res.status(401).send({ message: err.message });
