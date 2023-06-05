@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const validator = require('validator');
 // const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
@@ -22,6 +24,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
+    validate: {
+      validator: (v) => validator.isEmail(v),
+    },
   },
   password: {
     type: String,
