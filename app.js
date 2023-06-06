@@ -1,5 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const { celebrate, Joi, errors } = require('celebrate');
 const routes = require('./routes/index');
 const { login, createUser } = require('./controllers/usersControllers');
 const { auth } = require('./middlewares/auth');
@@ -12,8 +14,21 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(6),
+  }),
+}), login);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).alphanum().max(30),
+    about: Joi.string().min(2).alphanum().max(30),
+    avatar: Joi.string().min(2).max(30),
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(6),
+  }),
+}), createUser);
 // app.use((req, res, next) => {
 //   req.user = {
 //     _id: '64359344f4f4aa99df69f780',
@@ -23,9 +38,11 @@ app.post('/signup', createUser);
 app.use(auth);
 app.use(routes);
 
-app.all('*', (req, res) => {
-  res.status(404).send({ message: 'Страница не найдена' });
-});
+// app.all('*', (req, res) => {
+//   res.status(404).send({ message: 'Страница не найдена' });
+// });
+
+app.use(errors());
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
