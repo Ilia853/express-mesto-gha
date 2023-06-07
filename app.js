@@ -26,6 +26,7 @@ app.post('/signup', celebrate({
     about: Joi.string().min(2).alphanum().max(30),
     /* eslint-disable */
     avatar: Joi.string().min(2).max(30).pattern(/^((http|https):\/\/)?(www\.)?([A-Za-zА-Яа-я0-9]{1}[A-Za-zА-Яа-я0-9\-]*\.?)*\.{1}[A-Za-zА-Яа-я0-9-]{2,8}(\/([\w#!:.?+=&%@!\-\/])*)?/),
+    /* eslint-enable */
     email: Joi.string().required().email(),
     password: Joi.string().required().min(6),
   }),
@@ -39,9 +40,9 @@ app.post('/signup', celebrate({
 app.use(auth);
 app.use(routes);
 
-// app.all('*', (req, res) => {
-//   res.status(404).send({ message: 'Страница не найдена' });
-// });
+app.all('*', (req, res) => {
+  res.status(404).send({ message: 'Страница не найдена' });
+});
 
 app.use(errors());
 

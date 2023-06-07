@@ -11,7 +11,7 @@ const {
 
 router.get('/', getUsers);
 
-router.get('/:userId', celebrate({
+router.get('/me', celebrate({
   params: Joi.object().keys({
     userId: Joi.string().length(24),
   }),
@@ -21,8 +21,8 @@ router.get('/:userId', celebrate({
 
 router.patch('/me', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).alphanum().max(30),
-    about: Joi.string().min(2).alphanum().max(30),
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
   }),
 }), updateUser);
 

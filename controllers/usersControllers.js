@@ -45,10 +45,11 @@ const getUsers = (req, res, next) => User.find({})
   .catch(next);
 
 const getUser = (req, res, next) => {
-  const { userId } = req.params;
-  return User.findById(userId)
+  // const { userId } = req.params;
+  User.findById(req.user._id)
     .then((user) => {
       if (user) {
+        console.log(user);
         res.status(200).send(user);
       } else {
         // res.status(404).send({ message: 'Пользователь не найден' });
@@ -82,7 +83,12 @@ const createUser = (req, res, next) => {
       email,
       password: hash,
     }))
-    .then((user) => res.status(200).send(user))
+    .then(() => res.status(200).send({
+      name,
+      about,
+      avatar,
+      email,
+    }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         // res.status(400).send({ message: 'Некорректные данные пользователя' });
