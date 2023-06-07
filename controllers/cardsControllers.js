@@ -56,7 +56,7 @@ const likeCard = (req, res, next) => {
         res.status(200).send(card);
       } else {
         // res.status(404).send({ message: 'Карточка не найдена' });
-        throw new BadRequestError('Карточка не найдена');
+        throw new NotFoundError('Карточка не найдена');
       }
     })
     .catch((err) => {
@@ -81,7 +81,7 @@ const dislikeCard = (req, res, next) => {
         res.status(200).send(card);
       } else {
         // res.status(404).send({ message: 'Карточка не найдена' });
-        throw new BadRequestError('Карточка не найдена');
+        throw new NotFoundError('Карточка не найдена');
       }
     })
     .catch((err) => {
