@@ -49,7 +49,6 @@ const getUser = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (user) {
-        console.log(user);
         res.status(200).send(user);
       } else {
         // res.status(404).send({ message: 'Пользователь не найден' });
