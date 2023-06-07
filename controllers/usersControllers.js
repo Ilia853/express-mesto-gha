@@ -66,6 +66,28 @@ const getUser = (req, res, next) => {
     });
 };
 
+const getUserById = (req, res, next) => {
+  const { userId } = req.params;
+  User.findById(userId)
+    .then((user) => {
+      if (user) {
+        res.status(200).send(user);
+      } else {
+        // res.status(404).send({ message: 'Пользователь не найден' });
+        throw new NotFoundError('Пользователь не найден');
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        // res.status(400).send({ message: 'Некорректный id пользователя' });
+        next(new BadRequestError('Некорректный id пользователя')); // BadRequestError
+      } else {
+        // res.status(500).send({ message: 'Ошибка сервера' });
+        next(err);
+      }
+    });
+};
+
 const createUser = (req, res, next) => {
   const {
     name,
@@ -153,6 +175,7 @@ module.exports = {
   login,
   getUsers,
   getUser,
+  getUserById,
   createUser,
   updateUser,
   updateAvatar,
