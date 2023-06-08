@@ -1,6 +1,7 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
+const ForbiddenError = require('../errors/forbidden-err');
 
 const getCards = (req, res, next) => {
   Card.find({})
@@ -9,21 +10,22 @@ const getCards = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  Card.findByIdAndDelete(req.params.cardId)
+  const { owner } = req.body;
+  Card.findById(req.params.cardId)
     .then((card) => {
-      if (card) {
-        res.status(200).send(card);
-      } else {
-        // res.status(404).send({ message: 'Карточка не найдена' });
+      if (!card) {
         throw new NotFoundError('Карточка не найдена');
+      } else if (owner === req.user._id) {
+        Card.deleteOne(req.params.cardId)
+          .then(res.status(200).send(card));
+      } else if (owner !== req.user._id) {
+        throw new ForbiddenError('нет прав на удаление карточки');
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        // res.status(400).send({ message: 'Некорректный id карточки' });
         next(new BadRequestError('Некорректный id карточки'));
       } else {
-        // res.status(500).send({ message: 'Ошибка сервера' });
         next(err);
       }
     });
