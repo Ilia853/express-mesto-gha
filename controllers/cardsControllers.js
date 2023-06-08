@@ -6,7 +6,7 @@ const ForbiddenError = require('../errors/forbidden-err');
 const getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.status(200).send(cards))
-    .catch(next);// (err) => res.status(500).send({ message: 'Ошибка сервера', error: err })
+    .catch(next);
 };
 
 const deleteCard = (req, res, next) => {
@@ -19,7 +19,6 @@ const deleteCard = (req, res, next) => {
         } else {
           throw new ForbiddenError('нет прав на удаление карточки');
         }
-        // throw new NotFoundError('Карточка не найдена');
       } else {
         throw new NotFoundError('Карточка не найдена');
       }
@@ -40,10 +39,8 @@ const createCard = (req, res, next) => {
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        // res.status(400).send({ message: 'Некорректные данные карточки' });
         next(new BadRequestError('Некорректные данные карточки'));
       } else {
-        // res.status(500).send({ message: 'Ошибка сервера' });
         next(err);
       }
     });
@@ -59,16 +56,13 @@ const likeCard = (req, res, next) => {
       if (card) {
         res.status(200).send(card);
       } else {
-        // res.status(404).send({ message: 'Карточка не найдена' });
         throw new NotFoundError('Карточка не найдена');
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        // res.status(400).send({ message: 'Некорректный id карточки' });
         next(new BadRequestError('Некорректный id карточки'));
       } else {
-        // res.status(500).send({ message: 'Ошибка сервера' });
         next(err);
       }
     });
@@ -84,16 +78,13 @@ const dislikeCard = (req, res, next) => {
       if (card) {
         res.status(200).send(card);
       } else {
-        // res.status(404).send({ message: 'Карточка не найдена' });
         throw new NotFoundError('Карточка не найдена');
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        // res.status(400).send({ message: 'Некорректный id карточки' });
         next(new BadRequestError('Некорректный id карточки'));
       } else {
-        // res.status(500).send({ message: 'Ошибка сервера' });
         next(err);
       }
     });

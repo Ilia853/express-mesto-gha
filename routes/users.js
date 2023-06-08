@@ -5,7 +5,6 @@ const {
   getUsers,
   getUser,
   getUserById,
-  // createUser,
   updateUser,
   updateAvatar,
 } = require('../controllers/usersControllers');
@@ -23,8 +22,6 @@ router.get('/:userId', celebrate({
     userId: Joi.string().length(24),
   }),
 }), getUserById);
-
-// router.post('/', createUser);
 
 router.patch('/me', celebrate({
   body: Joi.object().keys({
