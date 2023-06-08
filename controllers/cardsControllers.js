@@ -10,21 +10,18 @@ const getCards = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  // const { owner } = req.body;
   Card.findById(req.params.cardId)
     .then((card) => {
-      if (!card) {
+      if (card) {
+        if (card.owner.toString() === req.user._id) {
+          Card.findByIdAndRemove(req.params.cardId)
+            .then(() => res.status(200).send(card));
+        } else {
+          throw new ForbiddenError('нет прав на удаление карточки');
+        }
+        // throw new NotFoundError('Карточка не найдена');
+      } else {
         throw new NotFoundError('Карточка не найдена');
-      } else if (card.owner.toString() === req.user._id) {
-        
-
-        Card.findByIdAndRemove(req.params.cardId)
-          .then(() => res.status(200).send(card));
-      } else if (card.owner.toString() !== req.user._id) {
-        console.log(card.owner.toString());
-        console.log(req.user._id);
-        throw new ForbiddenError('нет прав на удаление карточки');
-        
       }
     })
     .catch((err) => {

@@ -31,12 +31,7 @@ app.post('/signup', celebrate({
     password: Joi.string().required().min(6),
   }),
 }), createUser);
-// app.use((req, res, next) => {
-//   req.user = {
-//     _id: '64359344f4f4aa99df69f780',
-//   };
-//   next();
-// });
+
 app.use(auth);
 app.use(routes);
 
