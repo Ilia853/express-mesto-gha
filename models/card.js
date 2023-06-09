@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const re = require('./user');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -12,9 +11,9 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      /* eslint-disable */
+    /* eslint-disable */
       validator: function (v) {
-        return re.test(v);
+        return /^((http|https):\/\/)?(www\.)?([A-Za-zА-Яа-я0-9]{1}[A-Za-zА-Яа-я0-9\-]*\.?)*\.{1}[A-Za-zА-Яа-я0-9-]{2,8}(\/([\w#!:.?+=&%@!\-\/])*)?/.test(v);
       },
     },
     /* eslint-enable */

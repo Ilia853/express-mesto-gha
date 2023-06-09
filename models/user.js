@@ -1,9 +1,6 @@
 const mongoose = require('mongoose');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const validator = require('validator');
-/* eslint-disable */
-const re = /^((http|https):\/\/)?(www\.)?([A-Za-zА-Яа-я0-9]{1}[A-Za-zА-Яа-я0-9\-]*\.?)*\.{1}[A-Za-zА-Яа-я0-9-]{2,8}(\/([\w#!:.?+=&%@!\-\/])*)?/;
-/* eslint-enable */
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -22,9 +19,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
-      /* eslint-disable */
+    /* eslint-disable */
       validator: function (v) {
-        return re.test(v);
+        return /^((http|https):\/\/)?(www\.)?([A-Za-zА-Яа-я0-9]{1}[A-Za-zА-Яа-я0-9\-]*\.?)*\.{1}[A-Za-zА-Яа-я0-9-]{2,8}(\/([\w#!:.?+=&%@!\-\/])*)?/.test(v);
       },
     },
     /* eslint-enable */
@@ -65,6 +62,3 @@ const userSchema = new mongoose.Schema({
 // };
 
 module.exports = mongoose.model('user', userSchema);
-module.exports = {
-  re,
-};
