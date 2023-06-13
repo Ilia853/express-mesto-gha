@@ -3,10 +3,13 @@ const router = require('express').Router();
 const { Joi, celebrate } = require('celebrate');
 const { auth } = require('../middlewares/auth');
 const { createUser, login } = require('../controllers/usersControllers');
+const { requestLogger } = require('../middlewares/logger');
 
 const userRouter = require('./users');
 const cardRouter = require('./cards');
 const NotFoundError = require('../errors/not-found-err');
+
+router.use(requestLogger);
 
 router.post('/signin', celebrate({
   body: Joi.object().keys({

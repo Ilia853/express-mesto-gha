@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { errors } = require('celebrate');
 const routes = require('./routes/index');
+const { errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
 
@@ -14,6 +15,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(routes);
+
+app.use(errorLogger);
 
 app.use(errors());
 
