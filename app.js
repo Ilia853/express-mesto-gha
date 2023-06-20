@@ -3,8 +3,10 @@ const mongoose = require('mongoose');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { errors } = require('celebrate');
 const routes = require('./routes/index');
+const { errorLogger } = require('./middlewares/logger');
+const { cors } = require('./middlewares/cors');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3001 } = process.env;
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {});
 
@@ -12,8 +14,10 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cors);
 app.use(routes);
+
+app.use(errorLogger);
 
 app.use(errors());
 
